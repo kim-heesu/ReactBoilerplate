@@ -14,7 +14,6 @@ export interface UseApiGet<T> {
 
 // mutation 요청
 export interface UseApiMutation<T, V> {
-  queryKey: QueryKey;
   url: string;
   onSuccess?: () => void;
   invalidateKeys?: QueryKey[];
