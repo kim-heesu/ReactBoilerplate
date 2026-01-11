@@ -20,6 +20,11 @@ export interface UseApiMutation<T, V> {
   method? : Exclude<HttpMethod, "GET">;
 }
 
+export interface MutationParams<T> {
+  path?: string;
+  body?: T
+}
+
 // 에러 응답타입
 export interface ApiErrorType {
     status: number;

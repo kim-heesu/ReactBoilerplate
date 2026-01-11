@@ -1,6 +1,6 @@
 import { api } from '@/api/core/axios';
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { UseApiGet, UseApiMutation, HttpMethod, QueryKey, ApiErrorType } from "@/types/api/core/apiType";
+import type { UseApiGet, UseApiMutation, MutationParams, HttpMethod, QueryKey } from "@/types/api/core/apiType";
 
 // queryKey 생성
 export const buildKey = (
@@ -30,19 +30,16 @@ export const useApiGet = <T>({
 
 // mutation 공통
 const useApiMutation = <T, V>({
-  url,
-  method,
-  onSuccess,
-  invalidateKeys,
-}: UseApiMutation<T, V>) => {
+  url,method,onSuccess,invalidateKeys
+}:UseApiMutation<T, V>) => {
   const queryClient = useQueryClient();
-
-  return useMutation<T, ApiErrorType, V>({
-    mutationFn: async (body: V) => {
-      const res = await api.request<T>({
-        url,
-        method,
-        data: body,
+  return useMutation ({
+    mutationFn: async ({path, body}:MutationParams<T>) => {
+      const finalUrl = path ? `${url}/${path}` : url;
+      const res = await api.request({
+        url: finalUrl, 
+        method, 
+        data: body
       });
       return res.data;
     },
@@ -54,11 +51,11 @@ const useApiMutation = <T, V>({
         );
       }
     },
-    onError: (error) => {
-      console.log(error)
+    onError: (err)=>{
+      console.log(err)
     }
   });
-};
+}
 
 // post
 export const useApiPost = <T, V>(options: UseApiMutation<T, V>) => {

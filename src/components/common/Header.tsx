@@ -11,6 +11,9 @@ export default function Header(){
 };
 
 const StyledHeader = styled.header`
+    h1 {
+        font-weight: 600;
+    }
     display: flex;
     gap: 2rem;
     * {
